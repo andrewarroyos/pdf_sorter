@@ -1,0 +1,112 @@
+{
+  "_comment": "SKU-based aisle matching (clean long-term format). Use SKU FAMILY prefixes like 'SLG1528' to match size variants like 'SLG1528-4' ... 'SLG1528-14'. Add a 'note' for human-readable shoe name. JSON does not support trailing // comments, so use the note field.",
+
+  "aisle_route": [
+    "A1",
+    "B1",
+    "A2_PART1",
+    "A2_PART2",
+    "B2",
+    "A3",
+    "B3",
+    "A4",
+    "B4",
+    "A5",
+    "B5",
+    "A6",
+    "B6",
+    "B7",
+    "Unknown"
+  ],
+
+  "sku_contains": {
+    "SLG1451": { "aisle": "A1", "note": "LOGAN - BLACK FLAME" },
+    "SLG1495": { "aisle": "A1", "note": "LOGAN - FOREST FLAME" },
+    "SLG1528": { "aisle": "A1", "note": "LOGAN - CREAM FLAME" },
+    "SLG1540": { "aisle": "A1", "note": "LOGAN - BLUE FLAME" },
+
+    "SLG1557": { "aisle": "B1", "note": "LOGAN - PHANTOM FLAME" },
+    "SLG1565": { "aisle": "B1", "note": "LOGAN - BROWN FLAME" },
+
+    "SLG1509": { "aisle": "A2_PART1", "note": "LOGAN PUFF - BLACK" },
+    "SLG1508": { "aisle": "A2_PART1", "note": "LOGAN PUFF - CREAM" },
+    "SLG1513": { "aisle": "A2_PART1", "note": "LOGAN PUFF - RED" },
+    "SLG1514": { "aisle": "A2_PART1", "note": "LOGAN PUFF - BLUE" },
+
+    "SLG1531": { "aisle": "A2_PART2", "note": "LOGAN PUFF - BROWN" },
+    "SLG1523": { "aisle": "A2_PART2", "note": "LOGAN PUFF - BLACKOUT" },
+    "SLG1543": { "aisle": "A2_PART2", "note": "LOGAN PUFF - PHANTOM" },
+    "SLG1583": { "aisle": "A2_PART2", "note": "LOGAN PUFF - CHROME" },
+
+    "MLOW": { "aisle": "B2", "note": "MYSTERY" },
+    "SLG1452": { "aisle": "B2", "note": "LOGAN - RED FLAME" },
+    "SLG1524": { "aisle": "B2", "note": "LOGAN PUFF - FOREST" },
+    "SLG1525": { "aisle": "B2", "note": "LOGAN PUFF - WHITEOUT" },
+
+    "SLG1555": { "aisle": "A3", "note": "LOGAN PUFF - BLACKDOPE" },
+    "SLG1527": { "aisle": "A3", "note": "LOGAN PUFF - TAUPE BEVEL" },
+    "SLG1573": { "aisle": "A3", "note": "LOGAN PUFF - CARBON BEVEL" },
+    "SLG1563": { "aisle": "A3", "note": "LOGAN PUFF - BLANCO BEVEL" },
+    "SLG1562": { "aisle": "A3", "note": "LOGAN PUFF - BLACK BEVEL" },
+    "SLG1526": { "aisle": "A3", "note": "LOGAN PUFF - CREAM BEVEL" },
+    "SLG1569": { "aisle": "A3", "note": "LOGAN PUFF - METALLIC CHROME" },
+
+    "SLG1535": { "aisle": "B3", "note": "LOGAN PUFF - SILVER" },
+    "SLG1570": { "aisle": "B3", "note": "LOGAN PUFF - MURDERED" },
+    "SLG1581": { "aisle": "B3", "note": "LOGAN PUFF - MURDERED" },
+    "SLG1552": { "aisle": "B3", "note": "LOGAN PUFF - BROWN CREPE" },
+    "SLG1571": { "aisle": "B3", "note": "LOGAN PUFF - CREAM CREPE" },
+    "SLG1550": { "aisle": "B3", "note": "LOGAN PUFF - CARBON CREPE" },
+
+    "SLG1580": { "aisle": "A4", "note": "LOGAN PUFF - GLOSSY RED" },
+    "SLG1567": { "aisle": "A4", "note": "LOGAN PUFF - GLOSSY WHITE" },
+    "SVM8011": { "aisle": "A4", "note": "VENTURA MULE - FURRY BROWN" },
+    "SVM8008": { "aisle": "A4", "note": "VENTURA MULE - FURRY DUSTY PINK" },
+    "SLG1574": { "aisle": "A4", "note": "LOGAN PUFF - GLOSSY BLUE" },
+    "SLG1566": { "aisle": "A4", "note": "LOGAN PUFF - GLOSSY PHANTOM" },
+    "SVM8007": { "aisle": "A4", "note": "VENTURA MULE - FURRY CREAM" },
+    "SVM8006": { "aisle": "A4", "note": "VENTURA MULE - FURRY CARBON" },
+
+
+    "SKT0002": { "aisle": "B4", "note": "SKTP.01 - CREAM" },
+    "SKT0001": { "aisle": "B4", "note": "SKTP.01 - BLACK" },
+    "SKT0004": { "aisle": "B4", "note": "SKTP.01 - CHROME" },
+    "SKT0005": { "aisle": "B4", "note": "SKTP.01 - TAUPE" },
+
+    
+    "SVM8005": { "aisle": "A5", "note": "VENTURA MULE - FURRY SAND" },
+    "SVM8004": { "aisle": "A5", "note": "VENTURA MULE - FURRY ONE LOVE" },
+    "SVN4650": { "aisle": "A5", "note": "VENICE STOMPER - BLACK" },
+    "SVN4651": { "aisle": "A5", "note": "VENICE STOMPER - CREAM" },
+    "SLG1577": {"aisle": "A5", "note": "LOGAN STOMPER - TAUPE" },
+    "SVN4550": { "aisle": "A5", "note": "VENICE - BLACK OG" },
+    "SVN4551": { "aisle": "A5", "note": "VENICE - CREAM SUEDE" },
+
+    "SVE2501": { "aisle": "B5", "note": "VENTURA - BLACK SUEDE" },
+    "SVE2591": { "aisle": "B5", "note": "VENTURA - CARBON BONES" },
+    "SFU3002": { "aisle": "B5", "note": "FUEGO - BLACK" },
+    "LIL FUEGO - CREAM": { "aisle": "B5", "note": "" },
+    "LIL FUEGO - BROWN": { "aisle": "B5", "note": "" },
+    "LIL FUEGO - FOREST": { "aisle": "B5", "note": "" },
+    "LIL FUEGO - PHANTOM": { "aisle": "B5", "note": "" },
+    "LIL FUEGO - BLACK": { "aisle": "B5", "note": "" },
+
+    "SLG1578": { "aisle": "A6", "note": "LOGAN STOMPER - STEALTH" },
+    "SLG1576": { "aisle": "A6", "note": "LOGAN STOMPER - BROWN" },
+    "SLG1541": { "aisle": "A6", "note": "LOGAN STOMPER - BLACK" },
+    "SLG1542": { "aisle": "A6", "note": "LOGAN STOMPER - CREAM" },
+
+    "GOWER - BLACK SUEDE": { "aisle": "B6", "note": "" },
+    "GOWER - CREAM SUEDE": { "aisle": "B6", "note": "" },
+    "GOWER - GRAPHITE": { "aisle": "B6", "note": "" },
+    "GOWER - BROWN": { "aisle": "B6", "note": "" },
+    "GOWER - CREAM X-RAY": { "aisle": "B6", "note": "" },
+    "GOWER - BLACK X-RAY": { "aisle": "B6", "note": "" },
+
+    "LENOX - GRAPHITE BEVEL": { "aisle": "B7", "note": "" },
+    "LENOX - CREAM BEVEL": { "aisle": "B7", "note": "" },
+    "GOWER - GRAPHITE BONES": { "aisle": "B7", "note": "" },
+    "VENTURA MULE - ONE LOVE SUEDE": { "aisle": "B7", "note": "" },
+    "VENTURA MULE - BLACK SUEDE": { "aisle": "B7", "note": "" }
+  }
+}
