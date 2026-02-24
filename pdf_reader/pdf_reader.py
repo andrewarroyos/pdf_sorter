@@ -573,7 +573,7 @@ def run_sort_pipeline(pdf_path: str, config_path: str, status_cb) -> Tuple[str, 
 class OrderSorterUI:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("PDF Order Sorter (Aisle Route)")
+        self.root.title("BLAZE SORT")
 
         self.pdf_path_var = tk.StringVar(value="")
         self.config_path_var = tk.StringVar(value=os.path.join(os.getcwd(), "config.json"))
