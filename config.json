@@ -1,5 +1,4 @@
-{
-  "CREDITS": "CONFIGURATION FILE FOR STRAYE WAREHOUSE SORTING - MADE BY ANDREW ARROYOS",
+"CREDITS": "CONFIGURATION FILE FOR STRAYE WAREHOUSE SORTING - MADE BY ANDREW ARROYOS",
 
   "tail_relocation": {
     "enabled": true
@@ -49,7 +48,7 @@
     "SLG1550": { "aisle": "B2", "note": "LOGAN PUFF - CARBON CREPE" },
     "SLG1524": { "aisle": "B2", "note": "LOGAN PUFF - FOREST" },
     "SLG1525": { "aisle": "B2", "note": "LOGAN PUFF - WHITEOUT" },
-    "LOGAN - GRAPHITE FLAME": { "aisle": "B2", "note": "LOGAN - GRAPHITE FLAME" },
+    "SLG1582": { "aisle": "B2", "note": "LOGAN - GRAPHITE FLAME" },
 
     "SLG1555": { "aisle": "A3", "note": "LOGAN PUFF - BLACKDOPE" },
     "SLG1569": { "aisle": "A3", "note": "LOGAN PUFF - METALLIC CHROME"},
@@ -92,6 +91,7 @@
     "SVN4651": { "aisle": "A5", "note": "VENICE STOMPER - CREAM" },
     "SVN4560": {"aisle": "A5", "note": "VENICE STOMPER - PHANTOM" },
     "SVN4563": {"aisle": "A5", "note": "VENICE STOMPER - DARKSIDE" },
+    "SVN4556": {"aisle": "A5", "note": "VENICE STOMPER - XPLR"},
 
 
     "SVE2597": { "aisle": "B5", "note": "VENTURA - BLANCO BONES" },
