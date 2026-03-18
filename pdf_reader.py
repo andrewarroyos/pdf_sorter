@@ -33,12 +33,16 @@ SIZE_PATTERN_RE = re.compile(
     r"\bM\s*\d{1,2}\s*(?:\|\s*W|[-/]\s*W)\s*\d{1,2}\b", re.IGNORECASE
 )
 
-# SKU extraction: looks for lines that contain "SKU" then grabs the most plausible token.
-# You may tweak these patterns for your PDFs.
-SKU_LINE_RE = re.compile(r"\bSKU\b", re.IGNORECASE)
-
 # Matches tokens like: SLG1528-12, SKT0001-10, SCS1030, KSX0001, FG-SGWP102
 SKU_TOKEN_RE = re.compile(r"\b[A-Z]{2,5}[A-Z0-9]{2,10}(?:-[A-Z0-9]{2,10})?\b")
+
+# Literal SKU label used as alternate evidence that a line represents one item.
+SKU_LABEL_RE = re.compile(r"\bSKU\s*:", re.IGNORECASE)
+
+# Narrower SKU evidence used only for counting; requires at least one digit.
+SKU_COUNT_TOKEN_RE = re.compile(
+    r"\b(?=[A-Z0-9-]*\d)[A-Z]{2,5}[A-Z0-9]{2,10}(?:-[A-Z0-9]{2,10})?\b"
+)
 
 
 
@@ -53,6 +57,7 @@ class PageData:
     order_id: Optional[str]
     product_names: List[str] = field(default_factory=list)
     skus: List[str] = field(default_factory=list)
+    item_count: int = 0
     errors: List[str] = field(default_factory=list)
 
 
@@ -260,6 +265,28 @@ def extract_skus_from_text(page_text: str) -> List[str]:
     return out
 
 
+def extract_item_count_from_text(page_text: str) -> int:
+    """
+    Count item lines using SKU evidence from extracted PDF text.
+    A line counts once if it contains either "SKU:" or at least one SKU-like token.
+    """
+    if not page_text:
+        return 0
+
+    total = 0
+    for line in page_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        line_upper = line.upper()
+        has_sku_label = bool(SKU_LABEL_RE.search(line))
+        has_sku_token = bool(SKU_COUNT_TOKEN_RE.search(line_upper))
+        if has_sku_label or has_sku_token:
+            total += 1
+    return total
+
+
 
 def extract_page_data(reader: PdfReader, page_index: int) -> PageData:
     pd = PageData(page_index=page_index, text_ok=True, order_id=None)
@@ -275,6 +302,7 @@ def extract_page_data(reader: PdfReader, page_index: int) -> PageData:
         pd.order_id = extract_order_id(txt)
         pd.product_names = extract_product_names_from_text(txt)
         pd.skus = extract_skus_from_text(txt)
+        pd.item_count = extract_item_count_from_text(txt)
 
         return pd
 
@@ -438,19 +466,19 @@ def group_pages_into_orders(pages: List[PageData]) -> List[OrderGroup]:
 
 
 
-def sort_orders(cfg: Dict[str, Any], orders: List[OrderGroup]) -> List[OrderGroup]:
+def sort_orders(config: Dict[str, Any], orders: List[OrderGroup]) -> List[OrderGroup]:
     """
     Sorting should be primarily by (aisle_route_rank, order_id numeric).
     If missing order_id_num, keep stable relative to each other by original first page.
     When tail relocation is enabled, move orders with >=2 matched SKU prefixes to the end.
     """
-    tail_relocation_enabled = bool(cfg.get("tail_relocation_enabled", True))
+    tail_relocation_enabled = bool(config.get("tail_relocation_enabled", True))
 
     def matched_prefix_count(o: OrderGroup) -> int:
         prefixes = set()
         for page in o.pages:
             for sku in (page.skus or []):
-                aisle, pref = match_sku_to_aisle(cfg, sku)
+                aisle, pref = match_sku_to_aisle(config, sku)
                 if aisle != "Unknown" and pref:
                     prefixes.add(pref)
         return len(prefixes)
@@ -469,29 +497,73 @@ def sort_orders(cfg: Dict[str, Any], orders: List[OrderGroup]) -> List[OrderGrou
 # Output writers
 # =========================
 
-def write_pdf(reader: PdfReader, sorted_orders: List[OrderGroup], output_pdf_path: str) -> None:
+def write_pdf(reader: PdfReader, sorted_orders: List[OrderGroup], output_pdf_path: str, cfg: Dict[str, Any]) -> None:
     writer = PdfWriter()
-    prev_route_rank: Optional[int] = None
-    for order in sorted_orders:
-        
-        # Add separator page when route rank changes (optional, commented out if cover pages are enough)
-        if prev_route_rank is not None and order.route_rank != prev_route_rank:
-             packet = BytesIO()
-             c = canvas.Canvas(packet, pagesize=letter)
-             
-             c.setFont("Helvetica-Bold", 24)
-             c.drawCentredString(306, 750, f"Aisle: {order.assigned_aisle}")
-             
-             c.save()
-             packet.seek(0)
-             
-             blank_pdf = ReportLabPdfReader(packet)
-             writer.add_page(blank_pdf.pages[0])
+    
+    # Collect SKU prefixes and notes per aisle
+    aisle_sku_notes: Dict[str, List[Tuple[str, str]]] = {}
+    for prefix, aisle, note in cfg.get("sku_contains_norm", []):
+        if aisle not in aisle_sku_notes:
+            aisle_sku_notes[aisle] = []
+        aisle_sku_notes[aisle].append((prefix, note))
+    
+    def add_aisle_cover_page(aisle: str, item_count: int) -> None:
+        packet = BytesIO()
+        c = canvas.Canvas(packet, pagesize=letter)
 
-        for idx in order.page_indices:
-            writer.add_page(reader.pages[idx])
+        c.setFont("Helvetica-Bold", 24)
+        c.drawCentredString(306, 750, f"Aisle: {aisle}")
+
+        c.setFont("Helvetica-Bold", 18)
+        c.drawCentredString(306, 720, f"Items: {item_count}")
+
+        sku_notes = aisle_sku_notes.get(aisle, [])
+        c.setFont("Helvetica", 12)
+        y = 680
+        for prefix, note in sku_notes:
+            if y < 50:
+                break
+            shoe = f"{prefix}: {note}" if note else prefix
+            c.drawCentredString(306, y, shoe)
             
-        prev_route_rank = order.route_rank
+            y -= 20
+
+        c.save()
+        packet.seek(0)
+
+        blank_pdf = ReportLabPdfReader(packet)
+        writer.add_page(blank_pdf.pages[0])
+
+    block_orders: List[OrderGroup] = []
+    current_block_key: Optional[Tuple[int, str]] = None
+
+    def flush_block() -> None:
+        if not block_orders or current_block_key is None:
+            return
+
+        block_item_count = 0
+        for block_order in block_orders:
+            for page in block_order.pages:
+                block_item_count += page.item_count
+
+        add_aisle_cover_page(current_block_key[1], block_item_count)
+
+        for block_order in block_orders:
+            for idx in block_order.page_indices:
+                writer.add_page(reader.pages[idx])
+
+    for order in sorted_orders:
+        block_key = (order.route_rank, order.assigned_aisle)
+        if current_block_key is None:
+            current_block_key = block_key
+        elif block_key != current_block_key:
+            flush_block()
+            block_orders = []
+            current_block_key = block_key
+
+        block_orders.append(order)
+
+    flush_block()
 
     with open(output_pdf_path, "wb") as f:
         writer.write(f)
@@ -558,9 +630,8 @@ def write_report_csv(sorted_orders: List[OrderGroup], output_csv_path: str) -> N
 # =========================
 
 def run_sort_pipeline(pdf_path: str, config_path: str, status_cb) -> Tuple[str, str]:
-    """
-    Returns (output_pdf_path, output_csv_path)
-    """
+    
+    # Safeguard for PDF not found
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF not found: {pdf_path}")
 
@@ -601,7 +672,7 @@ def run_sort_pipeline(pdf_path: str, config_path: str, status_cb) -> Tuple[str, 
 
     # Write outputs
     status_cb(f"Writing output PDF: {output_pdf_path}")
-    write_pdf(reader, sorted_orders, output_pdf_path)
+    write_pdf(reader, sorted_orders, output_pdf_path, cfg)
 
     status_cb(f"Writing CSV report: {output_csv_path}")
     write_report_csv(sorted_orders, output_csv_path)
