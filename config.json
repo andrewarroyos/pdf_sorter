@@ -52,7 +52,9 @@
     "SLG1600": { "aisle": "B2", "note": "LOGAN - WILD" },
     "SLG1591": { "aisle": "B2", "note": "LOGAN - CHROME BEVEL" },
     "SLG1593": { "aisle": "B2", "note": "LOGAN - TAUPE BEVEL" },
-    
+    "SLG1573": { "aisle": "B2", "note": "LOGAN - CARBON BEVEL" },
+    "SLG1526": { "aisle": "B2", "note": "LOGAN - CREAM BEVEL" },
+
 
     "SLG1555": { "aisle": "A3", "note": "LOGAN PUFF - BLACKDOPE" },
     "SLG1608": { "aisle": "A3", "note": "LOGAN PUFF - GLOSSY FOREST" },
@@ -61,6 +63,7 @@
     "SLG1583": { "aisle": "A3", "note": "LOGAN PUFF - CHROME" },
     "SLG1580": { "aisle": "A3", "note": "LOGAN PUFF - GLOSSY RED" },
     "SLG1574": { "aisle": "A3", "note": "LOGAN PUFF - GLOSSY BLUE" },
+    "SLG1599": { "aisle": "A3", "note": "LOGAN PUFF - WILD" },
 
     "SLG1523": { "aisle": "B3", "note": "LOGAN PUFF - BLACKOUT" },
     "SLG1604": { "aisle": "B3", "note": "LOGAN PUFF - BLACKOUT" },
@@ -146,4 +149,3 @@
     "SLG1613": { "aisle": "B8", "note": "LOGAN PUFF - METALLIC BLACK"}
   }
 }
-
